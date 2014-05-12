@@ -1,0 +1,22 @@
+#previewContainer {
+  max-width: 600px;
+  max-height: 700px;
+}
+
+#previewContainer .modal-body {
+  padding: 5px;
+}
+
+#previewContainer .preview-image {
+  max-width: 550px;
+  max-height: 650px;
+}
+
+
+#previewContainer {
+  /*
+  bottom: 10px !important;
+  top: auto;
+  */
+}
+
