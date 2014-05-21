@@ -1,11 +1,12 @@
-#previewContainer.modal.fade(data-replace="true", tabindex='-1', role='dialog', aria-labelledby='translate-label', aria-hidden='true')
+#salsita-bf7gv34dbf29r3gr-modal-content
 
-  .modal-content
+  .spinner
+    .loading-spinner(style="width: 200px; margin-left: -100px;")
+      .progress.progress-striped.active
+        .progress-bar(style="width: 100%;")
 
-    .modal-header
-      button(type="button", class="close", data-dismiss="modal", aria-hidden="true") x
-      h4.title
-
-    #content.modal-body
-      .description
-      img.preview-image
+  .content.modal-body
+    .title
+    hr
+    .description
+    img.preview-image
