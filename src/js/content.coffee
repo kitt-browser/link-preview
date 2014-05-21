@@ -75,8 +75,7 @@ _jQuery = $.noConflict(true)
   $ ->
     $('body').scalebreaker {
       dialogContent: $(previewTemplate())
-      dialogPosition: 'bottom',
-      debug: true
+      dialogPosition: 'bottom'
     }
 
     chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
