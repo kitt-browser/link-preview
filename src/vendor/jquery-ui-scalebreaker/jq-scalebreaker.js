@@ -9,101 +9,113 @@
         dialogPosition: 'bottom',
         closeOnBackdrop: true,
         denyUserScroll: true,
+        refreshOnScroll: true,
         debug: false
       },
       _create: function() {
-        this.rawElement = "<div id='" + this.options.idNamespace + "'>           <div id='" + this.options.idNamespace + "-dialog'>             <div id='" + this.options.idNamespace + "-dialog-content'></div>           </div>         </div>";
-        this.backdrop = null;
+        this.rawElement = "<div id='" + this.options.idNamespace + "-wrapper'>          <div id='" + this.options.idNamespace + "-dialog-scalable'>            <div id='" + this.options.idNamespace + "-dialog-scrollable'>              <div id='" + this.options.idNamespace + "-dialog-content'></div>              <span id='" + this.options.idNamespace + "-dialog-close'></span>            </div>          </div>        </div>";
+        this.scrollbar = null;
+        this.wrapper = null;
         this.dialog = null;
-        this.dialogContent = null;
-        this.scaleFactor = null;
+        this.scrollarea = null;
+        this.content = null;
+        this.close = null;
         this.fullPageHeight = null;
-        this.currentViewportOffset = [];
+        this.scaleFactor = null;
+        this.currentViewportOffset = null;
         return this._initWidget();
       },
       _initWidget: function() {
         $('body').append(this.rawElement);
-        this.backdrop = $('#' + this.options.idNamespace);
-        this.dialog = $('#' + this.options.idNamespace + '-dialog');
-        this.dialogContent = $('#' + this.options.idNamespace + '-dialog-content');
-        this._logMessage('wrapper reference created', this.backdrop);
-        this._setBackdropHeight();
-        return this.addContentToDialog(this.options.dialogContent);
+        this.wrapper = $('#' + this.options.idNamespace + '-wrapper');
+        this.dialog = $('#' + this.options.idNamespace + '-dialog-scalable');
+        this.scrollarea = $('#' + this.options.idNamespace + '-dialog-scrollable');
+        this.content = $('#' + this.options.idNamespace + '-dialog-content');
+        this.close = $('#' + this.options.idNamespace + '-dialog-close');
+        this._setInitialViewport();
+        return this.changeDialogContent(this.options.dialogContent);
+      },
+      _setInitialViewport: function() {
+        this.fullPageHeight = Math.max(document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        return this.wrapper.css({
+          'height': this.fullPageHeight
+        });
+      },
+      _getCurrentViewport: function() {
+        this.scaleFactor = window.innerWidth / document.documentElement.clientWidth;
+        this._logMessage('scale factor', this.scaleFactor);
+        this.currentViewportOffset = [window.pageXOffset, window.pageYOffset];
+        return this._logMessage('current viewport offset', this.currentViewportOffset);
+      },
+      _rescaleAndReposition: function() {
+        this.dialog.css({
+          'left': this.currentViewportOffset[0],
+          'transform': "scale(" + this.scaleFactor + ")",
+          '-webkit-transform': "scale(" + this.scaleFactor + ")"
+        });
+        if (this.options.dialogPosition === 'top') {
+          this.dialog.css({
+            'top': this.currentViewportOffset[1],
+            'transform-origin': '0 0',
+            '-webkit-transform-origin': '0 0'
+          });
+        }
+        if (this.options.dialogPosition === 'bottom') {
+          return this.dialog.css({
+            'bottom': this.fullPageHeight - (this.currentViewportOffset[1] + window.innerHeight),
+            'transform-origin': '0 100%',
+            '-webkit-transform-origin': '0 100%'
+          });
+        }
+      },
+      _manageScrollbar: function() {
+        if (this.content.outerHeight() > this.scrollarea.outerHeight() && !this.scrollbar) {
+          return this.scrollbar = new IScroll(this.scrollarea.get(0), {
+            HWCompositing: true,
+            useTransition: false,
+            click: true
+          });
+        } else if (this.scrollbar) {
+          return this.scrollbar.refresh();
+        }
       },
       _logMessage: function(name, args) {
         if (this.options.debug) {
           return console.log("" + this.options.idNamespace + ": " + name, args);
         }
       },
-      _getScaleFactor: function() {
-        this.scaleFactor = window.innerWidth / document.documentElement.clientWidth;
-        this._logMessage('scale factor', this.scaleFactor);
-        return this.scaleFactor;
-      },
-      _getCurrentViewportOffset: function() {
-        this.currentViewportOffset = [window.pageXOffset, window.pageYOffset];
-        this._logMessage('current viewport offset', this.currentViewportOffset);
-        return this.currentViewportOffset;
-      },
-      _setBackdropHeight: function() {
-        this.fullPageHeight = Math.max(document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-        return this.backdrop.css({
-          'height': this.fullPageHeight
-        });
-      },
-      addContentToDialog: function(content) {
-        this.dialogContent.html(content);
-        return this._logMessage('adding content to dialog', content);
-      },
-      rescaleAndReposition: function(el) {
-        var newViewport, _self;
-        _self = this;
-        newViewport = this._getCurrentViewportOffset();
-        if (this.options.dialogPosition === 'top') {
-          el.css({
-            'top': newViewport[1],
-            'left': newViewport[0],
-            'transform-origin': '0 0',
-            '-webkit-transform-origin': '0 0'
-          });
-        }
-        if (this.options.dialogPosition === 'bottom') {
-          el.css({
-            'bottom': _self.fullPageHeight - (newViewport[1] + window.innerHeight),
-            'left': newViewport[0],
-            'transform-origin': '0 100%',
-            '-webkit-transform-origin': '0 100%'
-          });
-        }
-        return el.css({
-          'transform': "scale(" + (_self._getScaleFactor()) + ")",
-          '-webkit-transform': "scale(" + (_self._getScaleFactor()) + ")"
-        });
-      },
       show: function() {
         var _self;
         _self = this;
         if (this.options.closeOnBackdrop) {
-          _self.backdrop.on("click." + this.options.idNamespace, function(e) {
-            if (e.target === _self.backdrop.get(0)) {
+          _self.wrapper.on("click." + this.options.idNamespace, function(e) {
+            if (e.target === _self.wrapper.get(0) || e.target === _self.dialog.get(0)) {
               return _self.hide();
             }
           });
         }
+        this.close.on("click." + this.options.idNamespace, function(e) {
+          return _self.hide();
+        });
         if (this.options.denyUserScroll) {
           $('body').on("touchmove." + this.options.idNamespace, function(e) {
             return e.preventDefault();
           });
         }
-        this.backdrop.addClass("" + this.options.idNamespace + "-show");
-        this.rescaleAndReposition(this.dialog);
+        this.wrapper.addClass("" + this.options.idNamespace + "-show");
+        this.refresh();
         if (this.options.cssAnimated) {
-          this.backdrop.addClass("" + this.options.idNamespace + "-animate-in");
-          this.backdrop.on('animationend webkitAnimationEnd', function(e) {
-            if (e.target === _self.dialogContent.get(0)) {
-              _self.backdrop.removeClass("" + _self.options.idNamespace + "-animate-in");
-              return _self.backdrop.off('animationend webkitAnimationEnd');
+          this.wrapper.addClass("" + this.options.idNamespace + "-animate-in");
+          this.wrapper.on('animationend webkitAnimationEnd', function(e) {
+            if (e.target === _self.scrollarea.get(0)) {
+              _self.wrapper.removeClass("" + _self.options.idNamespace + "-animate-in");
+              return _self.wrapper.off('animationend webkitAnimationEnd');
             }
+          });
+        }
+        if (this.options.refreshOnScroll) {
+          $(window).on("scroll." + this.options.idNamespace, function(e) {
+            return _self.refresh();
           });
         }
         return this._logMessage('showing widget');
@@ -115,31 +127,50 @@
           $('body').off("touchmove." + this.options.idNamespace);
         }
         if (this.options.closeOnBackdrop && this.options.cssAnimated) {
-          _self.backdrop.off("click." + this.options.idNamespace);
-          this.backdrop.addClass("" + this.options.idNamespace + "-animate-out");
-          this.backdrop.on('animationend webkitAnimationEnd', function(e) {
-            if (e.target === _self.dialogContent.get(0)) {
-              _self.backdrop.removeClass("" + _self.options.idNamespace + "-animate-out");
-              _self.backdrop.removeClass("" + _self.options.idNamespace + "-show");
-              _self.dialog.removeAttr('style');
-              return _self.backdrop.off('animationend webkitAnimationEnd');
+          _self.wrapper.off("click." + this.options.idNamespace);
+          this.wrapper.addClass("" + this.options.idNamespace + "-animate-out");
+          this.wrapper.on('animationend webkitAnimationEnd', function(e) {
+            if (e.target === _self.scrollarea.get(0)) {
+              _self.wrapper.removeClass("" + _self.options.idNamespace + "-animate-out");
+              _self.wrapper.removeClass("" + _self.options.idNamespace + "-show");
+              return _self.wrapper.off('animationend webkitAnimationEnd');
             }
           });
         } else if (this.options.closeOnBackdrop) {
-          _self.backdrop.off("click." + this.options.idNamespace);
-          this.backdrop.removeClass("" + this.options.idNamespace + "-show");
-          this.dialog.removeAttr('style');
+          _self.wrapper.off("click." + this.options.idNamespace);
+          this.wrapper.removeClass("" + this.options.idNamespace + "-show");
+        }
+        if (this.options.refreshOnScroll) {
+          $(window).off("scroll." + this.options.idNamespace);
         }
         return this._logMessage('hiding widget');
       },
+      changeDialogContent: function(content) {
+        this.content.html(content);
+        this.refresh();
+        return this._logMessage('adding content to dialog', content);
+      },
+      refresh: function() {
+        this._getCurrentViewport();
+        this._rescaleAndReposition();
+        return this._manageScrollbar();
+      },
       destroy: function() {
-        this.backdrop.remove();
+        $(window).off("scroll." + this.options.idNamespace);
+        this.wrapper.remove();
         this.rawElement = null;
-        this.backdrop = null;
+        this.wrapper = null;
         this.dialog = null;
+        this.scrollarea = null;
+        this.content = null;
+        this.close = null;
         this.scaleFactor = null;
-        this.initialViewport = null;
+        this.fullPageHeight = null;
         this.currentViewportOffset = null;
+        if (this.scrollbar) {
+          this.scrollbar.destroy();
+        }
+        this.scrollbar = null;
         return this._destroy();
       },
       _destroy: $.noop
