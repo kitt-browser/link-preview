@@ -21,7 +21,6 @@
         "js/content.js"
       ],
       "css": [
-        "vendor/css-modal/modal.css"
       ]
     }
   ],
