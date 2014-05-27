@@ -3,7 +3,6 @@
 
     # TODO:
     # fix non-mobile websites scaling back to a tiny dialog (correct but wrong)
-    # fix the physical scrollbar size counted in innerWidth
     # add scale to center
     # make instanceable html?
 
@@ -35,9 +34,8 @@
       @scrollarea = null
       @content = null
       @close = null
-      # Static data acquired on widget load.
-      @fullPageHeight = null
       # Dynamic data based on actual user values.
+      @fullPageHeight = null
       @scaleFactor = null
       @currentViewportOffset = null
       @_initWidget()
@@ -51,14 +49,11 @@
       @scrollarea = $('#' + @options.idNamespace + '-dialog-scrollable')
       @content = $('#' + @options.idNamespace + '-dialog-content')
       @close = $('#' + @options.idNamespace + '-dialog-close')
-      # Sets height of the backdrop, important step prone to potential issues.
-      # Position fixed cannot be used due to iPhone post-process moving elements relative to page edge during user scaling.
-      @_setInitialViewport()
       # Append initial HTML content.
       # The widget stays in the DOM so any 3rd party manipulation of it's content is A-okay at any time.
       @changeDialogContent @options.dialogContent
 
-    _setInitialViewport: ->
+    _setFullPageHeight: ->
       @fullPageHeight = Math.max(document.body.offsetHeight,
         document.documentElement.clientHeight,
         document.documentElement.scrollHeight,
@@ -68,11 +63,18 @@
         'height': @fullPageHeight
 
     _getCurrentViewport: ->
+      bodyOverflow = $('body').css 'overflow'
+      # Hide the scrollbars so the calculations don't fail.
+      $('body').css
+        'overflow': 'hidden'
       @scaleFactor = window.innerWidth/document.documentElement.clientWidth
       @_logMessage 'scale factor', @scaleFactor
       # This may be too iPhony (though nice), needs testing across browsers and devices.
       @currentViewportOffset = [window.pageXOffset, window.pageYOffset]
       @_logMessage 'current viewport offset', @currentViewportOffset
+      # Revert back to the original page value.
+      $('body').css
+        'overflow': bodyOverflow
 
     _rescaleAndReposition: ->
       @dialog.css
@@ -109,7 +111,7 @@
       # Close binds.
       if @options.closeOnBackdrop
         _self.wrapper.on "click.#{@options.idNamespace}", (e) ->
-          if e.target is _self.wrapper.get(0) or e.target is _self.dialog.get(0)
+          if e.target is _self.wrapper.get(0)
             _self.hide()
       @close.on "click.#{@options.idNamespace}", (e) ->
         _self.hide()
@@ -168,9 +170,13 @@
       @_logMessage 'adding content to dialog', content
 
     refresh: ->
+      # Sets height of the backdrop, important step prone to potential issues.
+      # Position fixed cannot be used due to iPhone post-process moving elements relative to page edge during user scaling.
+      @_setFullPageHeight()
       @_getCurrentViewport()
       @_rescaleAndReposition()
       @_manageScrollbar()
+      @_logMessage 'refreshing'
 
     destroy: ->
       $(window).off "scroll.#{@options.idNamespace}"
