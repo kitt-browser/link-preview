@@ -3,15 +3,7 @@ previewTemplate = require("../html/popover.jade")
 _ = require("../vendor/underscore/underscore")
 Q = require("../../node_modules/q")
 
-require "../vendor/bootstrap/bootstrap"
-require "../vendor/bootstrap/bootstrap.css"
-
 require "../css/content.css"
-
-require "../vendor/bootstrap-modal/bootstrap-modal-bs3patch.css"
-require "../vendor/bootstrap-modal/bootstrap-modal.css"
-require "../vendor/bootstrap-modal/bootstrap-modal"
-require "../vendor/bootstrap-modal/bootstrap-modalmanager"
 
 require('../vendor/jquery-ui-scalebreaker/jquery-ui-1.10.4.custom.min')
 require('../vendor/jquery-ui-scalebreaker/jq-scalebreaker.css')
@@ -49,6 +41,8 @@ _jQuery = $.noConflict(true)
 
         $popup.find('.spinner').hide()
         $popup.find('.content').show()
+
+      $("body").scalebreaker('refresh')
     , 200
 
 

@@ -1,3 +1,173 @@
-#salsita-bf7gv34dbf29r3gr-modal-content img {
-  width: 90%;
+#jq-scalebreaker-wrapper header,
+#jq-scalebreaker-wrapper footer,
+#jq-scalebreaker-wrapper section,
+#jq-scalebreaker-wrapper article,
+#jq-scalebreaker-wrapper aside,
+#jq-scalebreaker-wrapper main,
+#jq-scalebreaker-wrapper figure,
+#jq-scalebreaker-wrapper figcaption {
+  display:block;
+}
+#jq-scalebreaker-wrapper html,#jq-scalebreaker-wrapper body,#jq-scalebreaker-wrapper div,#jq-scalebreaker-wrapper span,
+#jq-scalebreaker-wrapper applet,#jq-scalebreaker-wrapper object,#jq-scalebreaker-wrapper iframe,
+#jq-scalebreaker-wrapper h1,#jq-scalebreaker-wrapper h2,#jq-scalebreaker-wrapper h3,#jq-scalebreaker-wrapper h4,
+#jq-scalebreaker-wrapper h5,#jq-scalebreaker-wrapper h6,#jq-scalebreaker-wrapper p,#jq-scalebreaker-wrapper blockquote,#jq-scalebreaker-wrapper pre,
+#jq-scalebreaker-wrapper a,#jq-scalebreaker-wrapper abbr,#jq-scalebreaker-wrapper acronym,#jq-scalebreaker-wrapper address,
+#jq-scalebreaker-wrapper big,#jq-scalebreaker-wrapper cite,#jq-scalebreaker-wrapper code,
+#jq-scalebreaker-wrapper del,#jq-scalebreaker-wrapper dfn,#jq-scalebreaker-wrapper em,#jq-scalebreaker-wrapper font,
+#jq-scalebreaker-wrapper img,#jq-scalebreaker-wrapper ins,#jq-scalebreaker-wrapper kbd,#jq-scalebreaker-wrapper q,#jq-scalebreaker-wrapper s,#jq-scalebreaker-wrapper samp,
+#jq-scalebreaker-wrapper small,#jq-scalebreaker-wrapper strike,#jq-scalebreaker-wrapper strong,#jq-scalebreaker-wrapper sub,
+#jq-scalebreaker-wrapper sup,#jq-scalebreaker-wrapper tt,#jq-scalebreaker-wrapper var,
+#jq-scalebreaker-wrapper b,#jq-scalebreaker-wrapper u,#jq-scalebreaker-wrapper i,#jq-scalebreaker-wrapper center,
+#jq-scalebreaker-wrapper dl,#jq-scalebreaker-wrapper dt,#jq-scalebreaker-wrapper dd,#jq-scalebreaker-wrapper ol,#jq-scalebreaker-wrapper ul,#jq-scalebreaker-wrapper li,
+#jq-scalebreaker-wrapper fieldset,#jq-scalebreaker-wrapper form,#jq-scalebreaker-wrapper label,#jq-scalebreaker-wrapper legend,
+#jq-scalebreaker-wrapper table,#jq-scalebreaker-wrapper caption,#jq-scalebreaker-wrapper tbody,#jq-scalebreaker-wrapper tfoot,
+#jq-scalebreaker-wrapper thead,#jq-scalebreaker-wrapper tr,#jq-scalebreaker-wrapper th,#jq-scalebreaker-wrapper td,
+#jq-scalebreaker-wrapper header,#jq-scalebreaker-wrapper footer,#jq-scalebreaker-wrapper section,#jq-scalebreaker-wrapper article,
+#jq-scalebreaker-wrapper aside,#jq-scalebreaker-wrapper figure,#jq-scalebreaker-wrapper figcaption {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+#jq-scalebreaker-wrapper body {
+  line-height: 1.5;
+}
+#jq-scalebreaker-wrapper ol, #jq-scalebreaker-wrapper ul {
+  list-style: none;
+}
+#jq-scalebreaker-wrapper blockquote, #jq-scalebreaker-wrapper q {
+  quotes: none;
+}
+#jq-scalebreaker-wrapper blockquote:before, #jq-scalebreaker-wrapper blockquote:after,
+#jq-scalebreaker-wrapper q:before, #jq-scalebreaker-wrapper q:after {
+  content: '';
+  content: none;
+}
+#jq-scalebreaker-wrapper :focus {
+  outline: 0;
+}
+#jq-scalebreaker-wrapper ins {
+  text-decoration: none;
+}
+#jq-scalebreaker-wrapper del {
+  text-decoration: line-through;
+}
+#jq-scalebreaker-wrapper table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+#jq-scalebreaker-dialog-scrollable {
+  background: #fff !important;
+}
+
+#jq-scalebreaker-dialog-scrollable img {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10.5px;
+}
+
+#jq-scalebreaker-wrapper .modal-body {
+  background: #fff;
+}
+
+#jq-scalebreaker-wrapper .title {
+  padding: 10.5px 10.5px 0 10.5px;
+
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 21px;
+}
+
+#jq-scalebreaker-wrapper .description {
+  padding: 10.5px 10.5px 0 10.5px;
+
+  font-size: 14px;
+  line-height: 21px;
+}
+
+#jq-scalebreaker-dialog-close {
+  background-color: #bf2f24 !important;
+}
+
+#jq-scalebreaker-dialog-scrollable:after,
+#jq-scalebreaker-dialog-scrollable:before {
+  background-size: auto 15px !important;
+  height: 15px;
+}
+
+.progress {
+  height:20px !important;
+  width:200px !important;
+  margin:50px auto 0 !important;
+  background-color:rgba(0,0,0,.1) !important;
+  border-radius:20px !important;
+  -webkit-box-shadow:0 1px 0 rgba(255,255,255,.03),inset 0 1px 0 rgba(0,0,0,.1) !important;
+  box-shadow:0 1px 0 rgba(255,255,255,.03),inset 0 1px 0 rgba(0,0,0,.1) !important;
+}
+
+
+.progress span {
+  display:inline-block !important;
+  height:100% !important;
+  width:100% !important;
+  border:1px solid #bf2f24 !important;
+  border-bottom-color:#bf2f24 !important;
+  background-color:#d3d3d3 !important;
+  border-radius:20px !important;
+  -webkit-box-sizing:border-box !important;
+  box-sizing:border-box !important;
+  background-image:
+  -webkit-linear-gradient(
+      -45deg,
+      rgba(191, 47, 36, 1) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(191, 47, 36, 1) 50%,
+      rgba(191, 47, 36, 1) 75%,
+      transparent 75%,
+      transparent
+  ) !important;
+  background-image:
+  linear-gradient(
+      -45deg,
+      rgba(191, 47, 36, 1) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(191, 47, 36, 1) 50%,
+      rgba(191, 47, 36, 1) 75%,
+      transparent 75%,
+      transparent
+  ) !important;
+  -webkit-background-size:50px 50px !important;
+  background-size:50px 50px !important;
+  -webkit-animation:move 2s linear infinite;
+  animation:move 2s linear infinite;
+  border-radius:20px !important;
+  overflow: hidden !important;
+  -webkit-box-shadow:inset 0 10px 0 rgba(255,255,255,.2) !important;
+  box-shadow:inset 0 10px 0 rgba(255,255,255,.2) !important;
+}
+
+@-webkit-keyframes move{
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+@keyframes move{
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 50px 50px;
+  }
 }
