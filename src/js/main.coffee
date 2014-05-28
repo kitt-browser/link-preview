@@ -12,7 +12,7 @@ sendMessage = (msg) ->
 
 menu = chrome.contextMenus.create(
   id: "previewContextMenu"
-  title: "Preview link"
+  title: "Preview Link"
   contexts: ["link"]
   enabled: true
 )
