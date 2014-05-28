@@ -11,7 +11,6 @@ require('../vendor/jquery-ui-scalebreaker/jq-scalebreaker')
 
 preview = require("./preview.coffee")
 
-
 # Make sure we don't overwrite page's real $.
 _jQuery = $.noConflict(true)
 
@@ -35,12 +34,12 @@ _jQuery = $.noConflict(true)
       do ($popup = null) ->
         $popup = $('#salsita-bf7gv34dbf29r3gr-modal-content')
 
-        $popup.find('.title').text title or ""
-        $popup.find('.description').text desc or ""
-        $popup.find('.preview-image').attr("src", img) or ""
+        $popup.find('.kitt-link-preview-title').text title or ""
+        $popup.find('.kitt-link-preview-description').text desc or ""
+        $popup.find('.kitt-link-preview-image').attr("src", img) or ""
 
-        $popup.find('.spinner').hide()
-        $popup.find('.content').show()
+        $popup.find('.kitt-link-preview-spinner').hide()
+        $popup.find('.kitt-link-preview-content').show()
 
       $("body").scalebreaker('refresh')
     , 200
@@ -50,8 +49,8 @@ _jQuery = $.noConflict(true)
     $('body').scalebreaker('show')
 
     $popup = $('#salsita-bf7gv34dbf29r3gr-modal-content')
-    $popup.find('.spinner').show()
-    $popup.find('.content').hide()
+    $popup.find('.kitt-link-preview-spinner').show()
+    $popup.find('.kitt-link-preview-content').hide()
 
     preview.getData(url)
       .then (res) ->
