@@ -10,6 +10,8 @@
         closeOnBackdrop: true,
         denyUserScroll: true,
         refreshOnScroll: true,
+        mobileFriendlyInitialWidth: 320,
+        mobileFriendlyMaxWidth: 568,
         debug: false
       },
       _create: function() {
@@ -20,9 +22,11 @@
         this.scrollarea = null;
         this.content = null;
         this.close = null;
-        this.fullPageHeight = null;
+        this.fullPageDimensions = {};
         this.scaleFactor = null;
         this.currentViewportOffset = null;
+        this.isMobileBrowser = /iPhone|iPod|Android|BlackBerry/.test(navigator.userAgent);
+        this.state = 'hidden';
         return this._initWidget();
       },
       _initWidget: function() {
@@ -32,27 +36,59 @@
         this.scrollarea = $('#' + this.options.idNamespace + '-dialog-scrollable');
         this.content = $('#' + this.options.idNamespace + '-dialog-content');
         this.close = $('#' + this.options.idNamespace + '-dialog-close');
-        this._setInitialViewport();
         return this.changeDialogContent(this.options.dialogContent);
       },
-      _setInitialViewport: function() {
-        this.fullPageHeight = Math.max(document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
-        return this.wrapper.css({
-          'height': this.fullPageHeight
+      _setWrapperDimensions: function() {
+        var bodyInlineStyle;
+        bodyInlineStyle = $('body').attr('style');
+        $('body').css({
+          'overflow': 'hidden'
         });
+        this.fullPageDimensions.Width = Math.max(document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth);
+        this.fullPageDimensions.Height = Math.max(document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        if (this.isMobileBrowser) {
+          this.wrapper.css({
+            'width': this.fullPageDimensions.Width,
+            'height': this.fullPageDimensions.Height
+          });
+        } else {
+          this.wrapper.css({
+            'height': this.fullPageDimensions.Height
+          });
+        }
+        if (bodyInlineStyle) {
+          return $('body').attr('style', bodyInlineStyle);
+        } else {
+          return $('body').removeAttr('style');
+        }
       },
       _getCurrentViewport: function() {
-        this.scaleFactor = window.innerWidth / document.documentElement.clientWidth;
+        this.scaleFactor = window.innerWidth / this.fullPageDimensions.Width;
         this._logMessage('scale factor', this.scaleFactor);
         this.currentViewportOffset = [window.pageXOffset, window.pageYOffset];
         return this._logMessage('current viewport offset', this.currentViewportOffset);
       },
       _rescaleAndReposition: function() {
-        this.dialog.css({
-          'left': this.currentViewportOffset[0],
-          'transform': "scale(" + this.scaleFactor + ")",
-          '-webkit-transform': "scale(" + this.scaleFactor + ")"
-        });
+        var mobileFriendlyScaleFactor;
+        if (!this.isMobileBrowser) {
+          this.dialog.css({
+            'left': this.currentViewportOffset[0]
+          });
+        } else if (this.isMobileBrowser && (this.fullPageDimensions.Width > this.options.mobileFriendlyMaxWidth)) {
+          mobileFriendlyScaleFactor = this.fullPageDimensions.Width / this.options.mobileFriendlyInitialWidth;
+          this.dialog.css({
+            'width': this.options.mobileFriendlyInitialWidth,
+            'left': this.currentViewportOffset[0],
+            'transform': "scale(" + (this.scaleFactor * mobileFriendlyScaleFactor) + ")",
+            '-webkit-transform': "scale(" + (this.scaleFactor * mobileFriendlyScaleFactor) + ")"
+          });
+        } else {
+          this.dialog.css({
+            'left': this.currentViewportOffset[0],
+            'transform': "scale(" + this.scaleFactor + ")",
+            '-webkit-transform': "scale(" + this.scaleFactor + ")"
+          });
+        }
         if (this.options.dialogPosition === 'top') {
           this.dialog.css({
             'top': this.currentViewportOffset[1],
@@ -62,7 +98,7 @@
         }
         if (this.options.dialogPosition === 'bottom') {
           return this.dialog.css({
-            'bottom': this.fullPageHeight - (this.currentViewportOffset[1] + window.innerHeight),
+            'bottom': this.fullPageDimensions.Height - (this.currentViewportOffset[1] + window.innerHeight),
             'transform-origin': '0 100%',
             '-webkit-transform-origin': '0 100%'
           });
@@ -89,7 +125,7 @@
         _self = this;
         if (this.options.closeOnBackdrop) {
           _self.wrapper.on("click." + this.options.idNamespace, function(e) {
-            if (e.target === _self.wrapper.get(0) || e.target === _self.dialog.get(0)) {
+            if (e.target === _self.wrapper.get(0)) {
               return _self.hide();
             }
           });
@@ -118,6 +154,7 @@
             return _self.refresh();
           });
         }
+        this.state = 'shown';
         return this._logMessage('showing widget');
       },
       hide: function() {
@@ -143,6 +180,7 @@
         if (this.options.refreshOnScroll) {
           $(window).off("scroll." + this.options.idNamespace);
         }
+        this.state = 'hidden';
         return this._logMessage('hiding widget');
       },
       changeDialogContent: function(content) {
@@ -150,10 +188,18 @@
         this.refresh();
         return this._logMessage('adding content to dialog', content);
       },
+      getContentElement: function() {
+        return this.content;
+      },
+      getDialogState: function() {
+        return this.state;
+      },
       refresh: function() {
+        this._setWrapperDimensions();
         this._getCurrentViewport();
         this._rescaleAndReposition();
-        return this._manageScrollbar();
+        this._manageScrollbar();
+        return this._logMessage('refreshing');
       },
       destroy: function() {
         $(window).off("scroll." + this.options.idNamespace);
@@ -165,7 +211,7 @@
         this.content = null;
         this.close = null;
         this.scaleFactor = null;
-        this.fullPageHeight = null;
+        this.fullPageDimensions = null;
         this.currentViewportOffset = null;
         if (this.scrollbar) {
           this.scrollbar.destroy();
