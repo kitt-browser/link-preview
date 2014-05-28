@@ -20,8 +20,7 @@
         "js/vendor/jquery-ui-scalebreaker/iscroll-lite.js",
         "js/content.js"
       ],
-      "css": [
-      ]
+      "css": []
     }
   ],
   "permissions": [
