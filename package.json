@@ -1,6 +1,6 @@
 {
   "name": "LinkPreview",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Show a quick preview of a link target.",
   "private": "true",
   "scripts": {
