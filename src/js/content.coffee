@@ -46,7 +46,17 @@ _jQuery = $.noConflict(true)
 
 
   onPreview = (url) ->
+    $('body').scalebreaker {
+      dialogContent: $(previewTemplate())
+      dialogPosition: 'bottom'
+    }
     $('body').scalebreaker('show')
+
+    $('body').on 'dialogHidden.jq-scalebreaker', ->
+      # Give it time to finish the anmimation.
+      _.delay ->
+        $('body').scalebreaker('destroy')
+      , 200
 
     $popup = $('#salsita-bf7gv34dbf29r3gr-modal-content')
     $popup.find('.kitt-link-preview-spinner').show()
@@ -54,7 +64,6 @@ _jQuery = $.noConflict(true)
 
     preview.getData(url)
       .then (res) ->
-
         res = JSON.parse(res)
         image = res.images?[0].url
         showPreview res.title, res.description, image
@@ -66,11 +75,6 @@ _jQuery = $.noConflict(true)
 
 
   $ ->
-    $('body').scalebreaker {
-      dialogContent: $(previewTemplate())
-      dialogPosition: 'bottom'
-    }
-
     chrome.runtime.onMessage.addListener (request, sender, sendResponse) ->
       console.log "message received:", request.event
       switch request.event
