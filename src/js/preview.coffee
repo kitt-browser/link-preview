@@ -6,10 +6,12 @@ getData = (url) ->
 
   return defer.reject() unless validateUrl(url)
 
+  encodedUrl = encodeURIComponent(url)
+
   # Proxy the HTTP request through background page.
   chrome.runtime.sendMessage null, {
     command: "http"
-    url: "http://api-proxy.salsitasoft.com/embedly?url=#{url}&\
+    url: "http://api-proxy.salsitasoft.com/embedly?url=#{encodedUrl}&\
           maxwidth=200&maxheight=150"
     type: "GET"
   }, (res) ->
