@@ -15,6 +15,7 @@
     {
       "matches": [
         "http://*/*"
+        "https://*/*"
       ],
       "js": [
         "js/vendor/jquery-ui-scalebreaker/iscroll-lite.js",
