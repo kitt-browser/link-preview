@@ -56,7 +56,7 @@ _jQuery = $.noConflict(true)
       .then (res) ->
 
         res = JSON.parse(res)
-        image = res.images?[0].url
+        image = res.images?[0]?.url
         showPreview res.title, res.description, image
       .fail (err) ->
         console.log "Error rendering preview!", err
